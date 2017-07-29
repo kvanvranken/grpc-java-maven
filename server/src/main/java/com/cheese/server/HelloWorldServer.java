@@ -1,14 +1,18 @@
 package com.cheese.server;
 
+import com.cheese.api.ApiConfig;
 import com.cheese.api.GreeterGrpc;
 import com.cheese.api.HelloReply;
 import com.cheese.api.HelloRequest;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+
 
 /**
  * Server that manages startup/shutdown of a {@code Greeter} server.
@@ -20,7 +24,11 @@ public class HelloWorldServer {
 
     private void start() throws IOException {
     /* The port on which the server should run */
-        int port = 50051;
+        Config allConfig = ConfigFactory.load();
+        ApiConfig apiConfig = ApiConfig.create(allConfig);
+        int port = apiConfig.getPort();
+
+
         server = ServerBuilder.forPort(port)
                 .addService(new GreeterImpl())
                 .build()
