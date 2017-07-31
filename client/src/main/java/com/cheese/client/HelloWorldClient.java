@@ -1,8 +1,11 @@
 package com.cheese.client;
 
+import com.cheese.api.ApiConfig;
 import com.cheese.api.GreeterGrpc;
 import com.cheese.api.HelloReply;
 import com.cheese.api.HelloRequest;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -61,7 +64,12 @@ public class HelloWorldClient {
      * greeting.
      */
     public static void main(String[] args) throws Exception {
-        HelloWorldClient client = new HelloWorldClient("localhost", 50051);
+        Config allConfig = ConfigFactory.load();
+        ApiConfig apiConfig = ApiConfig.create(allConfig);
+        int port = apiConfig.getPort();
+
+
+        HelloWorldClient client = new HelloWorldClient("localhost", apiConfig.getPort());
         try {
       /* Access a service running on the local machine on port 50051 */
             String user = "world";
